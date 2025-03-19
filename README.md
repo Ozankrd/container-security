@@ -20,6 +20,9 @@ L'objectif est de comprendre comment limiter l'exposition des ports d'un contene
    ss -tulnp | grep 8080
    ```
 3. Confirmer que le conteneur est accessible uniquement sur **localhost**.
+![ok](https://github.com/Ozankrd/container-security/blob/s2/1.png)
+![ok](https://github.com/Ozankrd/container-security/blob/s2/1.1.png)
+
 
 ## 2. Restreindre les Permissions d’Accès aux Fichiers Sensibles
 On va monter un volume en mode lecture seule pour éviter toute modification accidentelle.
@@ -39,6 +42,8 @@ On va monter un volume en mode lecture seule pour éviter toute modification acc
    ```
    
    **Résultat attendu :** L’écriture doit être refusée en raison des permissions restreintes.
+   
+![ok](https://github.com/Ozankrd/container-security/blob/s2/2.png)
 
 ## 3. Auditer la Configuration d’un Conteneur avec Docker Bench
 Docker Bench permet d’analyser les configurations de sécurité de l’hôte et des conteneurs.
@@ -56,6 +61,7 @@ Docker Bench permet d’analyser les configurations de sécurité de l’hôte e
    docker run --rm -it vulnerables/web-dvwa sh
    ```
 4. Identifier les vulnérabilités potentielles et les permissions excessives.
+![ok](https://github.com/Ozankrd/container-security/blob/s2/3.png)
 
 ## 4. Stocker et Utiliser des Secrets avec HashiCorp Vault
 L’objectif est de comprendre comment gérer des secrets de manière sécurisée.
@@ -76,6 +82,17 @@ L’objectif est de comprendre comment gérer des secrets de manière sécurisé
    TOKEN=$(curl --request POST --data '{"password":"password123"}' http://host.docker.internal:8200/v1/auth/userpass/login/user1 | jq -r .auth.client_token)
    curl --header "X-Vault-Token: $TOKEN" http://host.docker.internal:8200/v1/kv/data/containers/mon-secret
    ```
+![ok](https://github.com/Ozankrd/container-security/blob/s2/4.png)
+
+![ok](https://github.com/Ozankrd/container-security/blob/s2/4.1.png)
+
+![ok](https://github.com/Ozankrd/container-security/blob/s2/4.2.png)
+
+![ok](https://github.com/Ozankrd/container-security/blob/s2/4.3.png)
+
+![ok](https://github.com/Ozankrd/container-security/blob/s2/4.4.png)
+
+![ok](https://github.com/Ozankrd/container-security/blob/s2/4.5.png)
 
 ## 5. Trouver une Clé API Cachée dans une Image Docker
 L’objectif est de simuler une attaque pour récupérer une clé API cachée dans une image Docker mal configurée.
