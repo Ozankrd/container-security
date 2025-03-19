@@ -17,7 +17,7 @@ docker run --rm --privileged alpine sh -c 'echo hello from privileged mode'
 - Accès total aux ressources de l’hôte.
 - Possibilité de modifier les fichiers critiques du système.
 - Escalade de privilèges et compromission de la machine hôte.
-![Description de l'image](https://github.com/Ozankrd/container-security/blob/s1/1.png)
+![ok](https://github.com/Ozankrd/container-security/blob/s1/1.png)
 ---
 
 ##  2. Simuler une Évasion de Conteneur
@@ -32,6 +32,8 @@ docker run --rm -v /:/mnt alpine sh -c 'ls /mnt'
 - Accès en lecture/écriture aux fichiers sensibles de l’hôte.
 - Possibilité de modifier les configurations critiques du système.
 - Menace d’exécution de commandes malveillantes sur l’hôte.
+
+![ok](https://github.com/Ozankrd/container-security/blob/s1/1.png)
 
 ---
 
@@ -61,6 +63,8 @@ CMD ["echo", "Container sécurisé!"]
 **Bonnes pratiques appliquées :**
 - Création d’un utilisateur non-root pour limiter les privilèges.
 - Utilisation d’une image légère (`alpine`) pour réduire la surface d’attaque.
+- 
+![ok](https://github.com/Ozankrd/container-security/blob/s1/3.png)
 
 ---
 
@@ -75,6 +79,7 @@ docker network disconnect bridge mon-container
 docker exec -it mon-container ping -c 4 google.com
 ```
 **Résultat attendu :** Le ping échoue, prouvant que le conteneur n’a plus accès à Internet.
+![ok](https://github.com/Ozankrd/container-security/blob/s1/4.png)
 
 ---
 
@@ -93,6 +98,7 @@ trivy image -f json -o scan_result.json vulnerables/web-dvwa
 - Détection d’une clé privée (`/etc/ssl/private/ssl-cert-snakeoil.key`).
 - Plusieurs failles critiques sur des paquets obsolètes.
 - Risques liés aux composants non mis à jour.
+![ok](https://github.com/Ozankrd/container-security/blob/s1/56.png)
 
 ---
 
@@ -115,6 +121,9 @@ diff scan_custom_image.txt scan_alpine.txt
 | **Trivy** | NVD, GitHub Advisory | Plus rapide | Peut générer des faux positifs |
 
 **Conclusion :** Grype est plus précis, mais Trivy est plus rapide et détecte aussi les secrets.
+![ok](https://github.com/Ozankrd/container-security/blob/s1/7.png)
+![ok](https://github.com/Ozankrd/container-security/blob/s1/8.png)
+
 
 ---
 
