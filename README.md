@@ -7,17 +7,17 @@ Ce projet regroupe différentes expérimentations visant à comprendre les vuln�
 
 ## 1. Tester un Conteneur avec des Permissions Élevées
 
-🔹 **Commande :**
+**Commande :**
 ```bash
 docker run --rm --privileged alpine sh -c 'echo hello from privileged mode'
 ```
-🔹 **Objectif :** Observer pourquoi l’exécution d’un conteneur en mode `--privileged` est dangereuse. 
+**Objectif :** Observer pourquoi l’exécution d’un conteneur en mode `--privileged` est dangereuse. 
 
  **Risques identifiés :**
 - Accès total aux ressources de l’hôte.
 - Possibilité de modifier les fichiers critiques du système.
 - Escalade de privilèges et compromission de la machine hôte.
-
+![Description de l'image](https://github.com/Ozankrd/container-security/blob/s1/1.png)
 ---
 
 ##  2. Simuler une Évasion de Conteneur
