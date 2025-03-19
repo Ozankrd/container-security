@@ -111,6 +111,8 @@ L’objectif est de simuler une attaque pour récupérer une clé API cachée da
    RUN /bin/sh -c apk add curl && curl -H "API-Key: U-never-will-saw-that" -L google.com
    ```
    Cela signifie que la clé API a été enregistrée dans une des couches de l’image.
+   
+![ok](https://github.com/Ozankrd/container-security/blob/s2/5.png)
 
 ### Comment le Développeur Aurait Dû Procéder ?
 - Ne pas inclure les clés API directement dans le **Dockerfile**.
@@ -118,16 +120,5 @@ L’objectif est de simuler une attaque pour récupérer une clé API cachée da
 - Nettoyer les couches d’historique après ajout de données sensibles.
 - Stocker les secrets dans un **gestionnaire sécurisé** comme HashiCorp Vault.
 
-## Conclusion
-Ce TP a permis d’explorer différentes vulnérabilités de sécurité liées aux conteneurs Docker et comment les prévenir. La gestion des ports, des fichiers sensibles, l’audit de sécurité et la protection des secrets sont des éléments clés pour garantir la sécurité d’un environnement Docker en production.
 
-**Recommandations finales :**
-- Toujours limiter l’exposition des services.
-- Vérifier les permissions des fichiers montés.
-- Auditer régulièrement les conteneurs.
-- Ne jamais stocker de secrets en dur dans les images Docker.
-- Utiliser des solutions dédiées pour la gestion des secrets.
 
----
-**Auteur : [Ton Nom]**  
-**Date : [Date du TP]**
