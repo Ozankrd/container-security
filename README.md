@@ -22,11 +22,11 @@ docker run --rm --privileged alpine sh -c 'echo hello from privileged mode'
 
 ##  2. Simuler une Évasion de Conteneur
 
-🔹 **Commande :**
+**Commande :**
 ```bash
 docker run --rm -v /:/mnt alpine sh -c 'ls /mnt'
 ```
-🔹 **Objectif :** Vérifier si le conteneur peut accéder au système de fichiers de l’hôte.
+**Objectif :** Vérifier si le conteneur peut accéder au système de fichiers de l’hôte.
 
 **Risques identifiés :**
 - Accès en lecture/écriture aux fichiers sensibles de l’hôte.
@@ -39,14 +39,14 @@ docker run --rm -v /:/mnt alpine sh -c 'ls /mnt'
 
 ## 3. Créer une Image Sécurisée
 
-🔹 **Dockerfile Minimaliste :**
+**Dockerfile Minimaliste :**
 ```dockerfile
 FROM alpine
 RUN adduser -D appuser
 USER appuser
 CMD ["echo", "Container sécurisé!"]
 ```
-🔹 **Étapes :**
+**Étapes :**
 1. Construire l’image :
    ```bash
    docker build -t secure-container .
@@ -70,11 +70,11 @@ CMD ["echo", "Container sécurisé!"]
 
 ## 4. Restreindre l’Accès Réseau d’un Conteneur
 
-🔹 **Déconnecter le réseau du conteneur :**
+**Déconnecter le réseau du conteneur :**
 ```bash
 docker network disconnect bridge mon-container
 ```
-🔹 **Tester l’accès internet :**
+**Tester l’accès internet :**
 ```bash
 docker exec -it mon-container ping -c 4 google.com
 ```
@@ -104,11 +104,11 @@ trivy image -f json -o scan_result.json vulnerables/web-dvwa
 
 ## 6. Scanner une Image pour Détecter les Vulnérabilités avec Grype
 
-🔹 **Scanner une image avec Grype :**
+**Scanner une image avec Grype :**
 ```bash
 grype alpine:latest
 ```
-🔹 **Comparer avec une image buildée :**
+**Comparer avec une image buildée :**
 ```bash
 grype mon-image:latest > scan_custom_image.txt
 grype alpine:latest > scan_alpine.txt
@@ -129,7 +129,7 @@ diff scan_custom_image.txt scan_alpine.txt
 
 ##  Conclusion Générale
 
-🔹 Ce projet a permis de :
+Ce projet a permis de :
 Comprendre les risques liés aux conteneurs Docker.
 Tester des vulnérabilités et des attaques courantes.
 Appliquer des solutions pour sécuriser les conteneurs.
