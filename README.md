@@ -1,7 +1,6 @@
 
 # Rapport d’Activité – Génération de Clé GPG, Signature et Publication d’Images Docker avec Cosign
 
-## Partie 1 : Création du projet et génération de la clé GPG
 
 ### 1. Création d’un projet GitLab
 
