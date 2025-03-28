@@ -194,7 +194,7 @@ spec:
 Déploiement :
 
 kubectl apply -f job.yml
-Le pod kube-bench-xxxxx s’est exécuté puis est passé en état Completed.
+Le pod s’est exécuté puis est passé en état Completed.
 ![1 10](https://github.com/user-attachments/assets/a980f7fe-a725-4145-9f24-e41210228ae7)
 
 ## 2. Consultation des résultats du scan
@@ -224,3 +224,74 @@ Ces résultats doivent être interprétés avec nuance : un cluster de test (com
 ![1 11](https://github.com/user-attachments/assets/b2c13be7-03fd-497a-8624-52782135ee8c)
 
 
+
+## Partie 4:
+
+## 1. Ajout du dépôt Helm Falco
+
+Falco étant distribué via Helm, nous avons commencé par ajouter le dépôt officiel :
+
+helm repo add falcosecurity https://falcosecurity.github.io/charts
+helm repo update
+
+## 2. Ajout du dépôt Helm de Falco
+Nous avons ajouté le dépôt officiel de Falco puis mis à jour les charts :
+
+
+helm repo add falcosecurity https://falcosecurity.github.io/charts
+helm repo update
+
+
+## 3. Création du namespace dédié
+Un namespace falco a été créé pour isoler les ressources :
+
+
+kubectl create ns falco
+## 4. Déploiement de Falco avec Falcosidekick UI
+Nous avons utilisé Helm pour installer Falco, en activant à la fois Falcosidekick et son interface web :
+
+helm -n falco install falco falcosecurity/falco \
+  --set falcosidekick.enabled=true \
+  --set falcosidekick.webui.enabled=true
+Le déploiement a démarré l’ensemble des composants suivants :
+
+falco (détecteurs sur chaque nœud)
+
+falcosidekick (gestionnaire d’alertes)
+
+falcosidekick-ui (interface web)
+
+redis (backend pour l'UI)
+
+## 5. Vérification de l’état des pods
+Quelques minutes après le déploiement, tous les pods sont passés à l’état Running :
+
+
+kubectl get pods -n falco
+Extrait observé :
+
+![1 12](https://github.com/user-attachments/assets/e3ca18a6-0979-4bca-bc5f-3120454425ed)
+
+
+## 6. Accès à l’interface web (Falcosidekick UI)
+Pour consulter l’interface graphique, nous avons exposé le service à l’aide d’un port-forward :
+
+kubectl port-forward svc/falco-falcosidekick-ui 2802:2802 -n falco
+En accédant à l’URL suivante dans le navigateur :  http://127.0.0.1:2802
+
+Nous avons pu afficher le dashboard en temps réel de FalcoSidekick UI, où s’affichent les événements et alertes détectés dans le cluster (exécution de commandes, accès au shell, manipulations réseau, etc.).
+
+## 7. Fonctionnement de Falco
+Falco surveille en continu les activités suspectes dans le cluster. Il s’appuie sur des règles définies pour détecter :
+
+L’ouverture d’un shell interactif dans un conteneur
+
+Des accès non autorisés à des fichiers sensibles
+
+Des processus anormaux exécutés dans des pods
+
+Des connexions réseau suspectes
+
+Les événements détectés sont envoyés vers Falcosidekick, qui les transmet à l’interface UI.
+
+![1 13](https://github.com/user-attachments/assets/f25295f4-1055-487d-8af0-1483e403f2b5)
