@@ -295,3 +295,86 @@ Des connexions réseau suspectes
 Les événements détectés sont envoyés vers Falcosidekick, qui les transmet à l’interface UI.
 
 ![1 13](https://github.com/user-attachments/assets/f25295f4-1055-487d-8af0-1483e403f2b5)
+
+## Partie 5
+
+## 1. Déploiement d’un pod `front` de type Alpine
+
+Le pod `front` a été défini dans le fichier `mon-pod.yml` :
+
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: front
+  name: front
+spec:
+  containers:
+  - image: alpine
+    name: front
+    command:
+    - /bin/sh
+    - -c
+    - sleep 1d
+Application :
+
+kubectl apply -f mon-pod.yml
+## 2. Génération d’une alerte via ouverture de shell
+Nous avons ouvert un terminal interactif dans le pod :
+
+kubectl exec -it front -- sh
+Résultat observé dans l’interface Falco :
+Règle déclenchée : Terminal shell in container
+
+Priorité : Notice
+
+Comportement détecté : lancement d’un shell (sh) dans un conteneur, ce qui est typiquement utilisé lors d’attaques manuelles ou de mouvements latéraux.
+
+## 3. Génération d’une alerte via accès à l’API Kubernetes
+Depuis le shell, nous avons installé curl et effectué une requête vers l’API :
+
+apk add curl
+curl -k http://10.96.0.1:80
+10.96.0.1 est l’adresse par défaut du service API Kubernetes dans un cluster Kind.
+
+Résultats observés dans Falco :
+Alerte n°1
+Règle : Contact K8S API Server From Container
+
+Priorité : Notice
+
+Explication : détection d'une connexion TCP sortante depuis un conteneur vers le serveur API Kubernetes – action typique d’un conteneur compromis essayant d’explorer le cluster.
+
+Alerte n°2
+Règle : Drop and execute new binary in container
+
+Priorité : Critical
+
+Explication : Falco a détecté l’exécution d’un binaire (curl) non présent dans l’image de base (alpine), signalant une tentative d’introduction et d'exécution d’un outil externe, potentiellement malveillant.
+
+## 4. Analyse des alertes dans Falcosidekick UI
+Toutes les alertes ont été consultées depuis l’interface web :
+
+http://127.0.0.1:2802
+
+Les informations suivantes étaient disponibles :
+
+Date et heure précise de l’événement
+
+Nom du conteneur (front)
+
+Image utilisée (docker.io/library/alpine)
+
+Commandes exécutées : sh, apk add curl, curl -k ...
+
+UID utilisateur (root)
+
+Niveau de sévérité (Notice, Critical)
+
+Règle associée à l’alerte (ex. execve, connect)
+
+Références MI!
+TRE ATT&CK pour classification (ex : T1059, TA0003, T1565)
+
+
+[1 14](https://github.com/user-attachments/assets/a76ee305-869f-4358-9b2c-84281feed1bd)
