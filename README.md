@@ -377,4 +377,4 @@ Références MI!
 TRE ATT&CK pour classification (ex : T1059, TA0003, T1565)
 
 
-[1 14](https://github.com/user-attachments/assets/a76ee305-869f-4358-9b2c-84281feed1bd)
+![1 14](https://github.com/user-attachments/assets/59d4f64c-8d66-4441-a770-fc1a463d6bfc)
