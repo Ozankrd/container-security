@@ -27,7 +27,6 @@ Pour lister les namespaces disponibles sur le cluster Kubernetes :
 
 ![ok](https://github.com/Ozankrd/container-security/blob/s3/1.3.png)
 
-# TP – Déploiement d’un Cluster Kubernetes avec Kind
 
 ## Partie 2 : Expérimentation des RBAC (Role-Based Access Control)
 
@@ -37,6 +36,7 @@ Pour lister les namespaces disponibles sur le cluster Kubernetes :
 
 Nous avons commencé par créer un namespace nommé `test-rbac`, destiné à l’expérimentation des règles RBAC.
 
+![1 4](https://github.com/user-attachments/assets/bd65efc0-020d-44e8-b6e4-f749f487ae37)
 
 
 
