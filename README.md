@@ -146,3 +146,81 @@ kubectl config use-context kind-kind
 ![1 8](https://github.com/user-attachments/assets/81144088-1687-491c-909c-fae3c86a9891)
 ![1 9](https://github.com/user-attachments/assets/bb18a594-0c5f-4e9b-b44f-d022c53e3637)
 
+
+## Partie 3 :
+
+## 1. Déploiement de kube-bench via un Job Kubernetes
+
+L’outil kube-bench a été exécuté à l’intérieur du cluster en créant une ressource de type `Job`. Ce choix permet d’exécuter le scan de manière éphémère et isolée, sans perturber les composants du cluster.
+
+Fichier `job.yml` :
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kube-bench
+spec:
+  template:
+    spec:
+      containers:
+      - name: kube-bench
+        image: aquasec/kube-bench:latest
+        command: ["kube-bench", "--benchmark", "cis-1.23"]
+        volumeMounts:
+        - name: var-lib-etcd
+          mountPath: /var/lib/etcd
+        - name: etc-systemd
+          mountPath: /etc/systemd
+        - name: etc-kubernetes
+          mountPath: /etc/kubernetes
+        - name: usr-bin
+          mountPath: /usr/bin
+      restartPolicy: Never
+      hostPID: true
+      volumes:
+      - name: var-lib-etcd
+        hostPath:
+          path: /var/lib/etcd
+      - name: etc-systemd
+        hostPath:
+          path: /etc/systemd
+      - name: etc-kubernetes
+        hostPath:
+          path: /etc/kubernetes
+      - name: usr-bin
+        hostPath:
+          path: /usr/bin
+  backoffLimit: 0
+
+Déploiement :
+
+kubectl apply -f job.yml
+Le pod kube-bench-xxxxx s’est exécuté puis est passé en état Completed.
+![1 10](https://github.com/user-attachments/assets/a980f7fe-a725-4145-9f24-e41210228ae7)
+
+## 2. Consultation des résultats du scan
+Les résultats du benchmark ont été récupérés 
+
+Ce rapport comprend une série de recommandations regroupées par composant : API Server, Scheduler, Controller Manager, etc. Chaque test est annoté par un statut :
+
+[PASS] : conforme
+
+[FAIL] : non conforme
+
+[WARN] : attention requise
+
+[INFO] : information seulement
+
+## 3. Résumé des résultats du benchmark
+Dans le contexte d’un cluster Kind exécuté localement, les résultats observés sont généralement les suivants :
+
+De nombreux tests sont passés avec succès, notamment ceux liés aux permissions de fichiers et à la configuration de base du kubelet.
+
+Quelques avertissements ([WARN]) apparaissent pour des fonctionnalités non activées dans un environnement de développement (ex. : audit logging, sécurité des communications TLS).
+
+Des échecs ([FAIL]) sont fréquemment observés sur des paramètres avancés de l’API Server ou sur l’absence d’authentification forte entre composants, ce qui est attendu dans un environnement non productif.
+
+Ces résultats doivent être interprétés avec nuance : un cluster de test (comme Kind) n'est pas conçu pour être totalement conforme aux normes de production CIS.
+
+![1 11](https://github.com/user-attachments/assets/b2c13be7-03fd-497a-8624-52782135ee8c)
+
+
